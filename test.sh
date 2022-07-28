@@ -6,7 +6,7 @@ assert() {
   ./minicc "$input" > tmp.s || exit
 
   riscv64-linux-gnu-gcc -static -o tmp tmp.s
-  qemu-riscv64 -L $RISCV/sysroot ./tmp
+  qemu-riscv64-static ./tmp
 
   actual="$?"
 
@@ -20,5 +20,6 @@ assert() {
 
 assert 0 0
 assert 42 42
+assert 114 "81+42-9"
 
 echo OK
