@@ -1,0 +1,21 @@
+name: minicc test
+
+on:
+  push:
+    branches: [ "master" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: install toolchain and runtime
+      run: |
+        sudo apt-get -y update
+        sudo apt-get -y install make gcc-riscv64-linux-gnu qemu-system-misc 
+    - name: build minicc
+      run: make
+    - name: run test
+      run: make test
