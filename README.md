@@ -1,1 +1,1 @@
-# rvcc
+# minicc
