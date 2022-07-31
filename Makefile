@@ -1,7 +1,12 @@
 CFLAGS=-std=c11 -g -fno-common
+SRCS=$(wildcard *.c)
+OBJS=$(SRCS:.c=.o)
 
-minicc: main.o
-	$(CC) -o minicc main.o $(LDFLAGS)
+minicc: $(OBJS)
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
+
+
+$(OBJS): minicc.h
 
 test: minicc
 	./test.sh
