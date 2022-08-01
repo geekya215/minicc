@@ -5,7 +5,6 @@ OBJS=$(SRCS:.c=.o)
 minicc: $(OBJS)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
-
 $(OBJS): minicc.h
 
 test: minicc
