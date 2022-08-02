@@ -168,6 +168,8 @@ static Node *primary(Token **rest, Token *tok) {
   }
 
   error_tok(tok, "expected an expression");
+
+  return NULL;
 }
 
 Node *parse(Token *tok) {

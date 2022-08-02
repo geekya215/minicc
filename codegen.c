@@ -26,6 +26,8 @@ static void gen_expr(Node *node) {
       gen_expr(node->lhs);
       printf("  neg a0, a0\n");
       return;
+    default:
+      break;
   }
 
   gen_expr(node->rhs);
@@ -61,6 +63,8 @@ static void gen_expr(Node *node) {
       printf("  slt a0, a1, a0\n");
       printf("  xori a0, a0, 1\n");
       return;
+    default:
+      break;
   }
 
   error("invalid expression");
