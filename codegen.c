@@ -17,6 +17,16 @@ static void pop(char *reg) {
   depth--;
 }
 
+static void gen_addr(Node *node) {
+  if (node->kind == ND_VAR) {
+    int offset = (node->name - 'a' + 1) * 8;
+    printf("  addi a0, fp, %d\n", -offset);
+    return;
+  }
+
+  error("not an lvalue");
+}
+
 static void gen_expr(Node *node) {
   switch (node->kind) {
     case ND_NUM:
@@ -25,6 +35,17 @@ static void gen_expr(Node *node) {
     case ND_NEG:
       gen_expr(node->lhs);
       printf("  neg a0, a0\n");
+      return;
+    case ND_VAR:
+      gen_addr(node);
+      printf("  ld a0, 0(a0)\n");
+      return;
+    case ND_ASSIGN:
+      gen_addr(node->lhs);
+      push();
+      gen_expr(node->rhs);
+      pop("a1");
+      printf("  sd a0, 0(a1)\n");
       return;
     default:
       break;
@@ -83,10 +104,19 @@ void codegen(Node *node) {
   printf("  .globl main\n");
   printf("main:\n");
 
+  printf("  addi sp, sp, -8\n");
+  printf("  sd fp, 0(sp)\n");
+  printf("  mv fp, sp\n");
+  printf("  addi sp, sp, -208\n");
+
   for (Node *n = node; n; n = n->next) {
     gen_stmt(n);
     assert(depth == 0);
   }
+
+  printf("  mv sp, fp\n");
+  printf("  ld fp, 0(sp)\n");
+  printf("  addi sp, sp, 8\n");
 
   printf("  ret\n");
 }
