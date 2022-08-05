@@ -1,4 +1,5 @@
 #include "minicc.h"
+#include <stdio.h>
 
 static int depth;
 
@@ -92,9 +93,16 @@ static void gen_expr(Node *node) {
 }
 
 static void gen_stmt(Node *node) {
-  if (node->kind == ND_EXPR_STMT) {
-    gen_expr(node->lhs);
-    return;
+  switch (node->kind) {
+    case ND_RETURN:
+      gen_expr(node->lhs);
+      printf("  j .L.return\n");
+      return;
+    case ND_EXPR_STMT:
+      gen_expr(node->lhs);
+      return;
+    default:
+      break;
   }
 
   error("invalid statement");
@@ -124,6 +132,7 @@ void codegen(Function *prog) {
     assert(depth == 0);
   }
 
+  printf(".L.return:\n");
   printf("  mv sp, fp\n");
   printf("  ld fp, 0(sp)\n");
   printf("  addi sp, sp, 8\n");
