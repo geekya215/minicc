@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+typedef struct Type Type;
 typedef struct Node Node;
 
 //
@@ -86,6 +87,7 @@ typedef struct Node Node;
 struct Node {
   NodeKind kind; // Node kind
   Node *next;    // Next node
+  Type *ty;      // Type, e.g. int or pointer to int
   Token *tok;    // Representative token
 
   Node *lhs;     // Left-hand side
@@ -108,8 +110,26 @@ struct Node {
 Function *parse(Token *tok);
 
 //
+// type.c
+//
+
+typedef enum {
+  TY_INT,
+  TY_PTR,
+} TypeKind;
+
+struct Type {
+  TypeKind kind;
+  Type *base;
+};
+
+extern Type *ty_int;
+
+bool is_integer(Type *ty);
+void add_type(Node *node);
+
+//
 // codegen.c
 //
 
 void codegen(Function *prog);
-
