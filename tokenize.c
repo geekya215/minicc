@@ -98,7 +98,7 @@ static bool is_keyword(Token *tok) {
 
 static void convert_keywords(Token *tok) {
   for (Token *t = tok; t->kind != TK_EOF; t = t->next)
-    if (is_keyword(tok))
+    if (is_keyword(t))
       t->kind = TK_KEYWORD;
 }
 
