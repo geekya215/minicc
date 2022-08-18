@@ -200,6 +200,11 @@ void codegen(Function *prog) {
     printf("  mv fp, sp\n");
     printf("  addi sp, sp, %d\n", -fn->stack_size);
 
+    // Save passed-by-register arguments to the stack
+    int i = 0;
+    for (Obj *var = fn->params; var; var = var->next)
+      printf("  sd %s, %d(fp)\n", argreg[i++], var->offset);
+
     gen_stmt(fn->body);
     assert(depth == 0);
 
